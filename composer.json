@@ -1,0 +1,27 @@
+{
+    "name": "rikudou/pay-by-square-decoder",
+    "description": "Decoder for the Pay By Square standard",
+    "type": "symfony-bundle",
+    "license": "WTFPL",
+    "authors": [
+        {
+            "name": "Dominik Chrastecky",
+            "email": "dominik@chrastecky.cz"
+        }
+    ],
+    "suggest": {
+        "symfony/framework-bundle": "Version 4.4 or greater, if you want this package to work with symfony"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rikudou\\BySquare\\": "src/"
+        }
+    },
+    "require-dev": {
+        "symfony/framework-bundle": ">=4.4"
+    }
+}
