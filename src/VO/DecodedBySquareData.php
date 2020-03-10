@@ -53,7 +53,7 @@ class DecodedBySquareData
     private $constantSymbol;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $specificSymbol;
 
@@ -102,9 +102,20 @@ class DecodedBySquareData
      */
     private $payeeAddressLine2;
 
+    /**
+     * DecodedBySquareData constructor.
+     *
+     * @param array<int, string> $rawData
+     * @param int                $version
+     */
     public function __construct(array $rawData, int $version)
     {
         $this->version = $version;
+
+        $dueDate = DateTime::createFromFormat('Ymd', $rawData[5] ?? '1970-01-01');
+        if ($dueDate === false) {
+            $dueDate = new DateTime('1970-01-01');
+        }
 
         // the first 4 bytes are the crc32 sum
         $this->paymentId = substr($rawData[0] ?? '', 4);
@@ -112,7 +123,7 @@ class DecodedBySquareData
         $this->regularPayment = ($rawData[2] ?? false) === '1';
         $this->amount = (float) $rawData[3] ?? 0;
         $this->currency = $rawData[4] ?? '';
-        $this->dueDate = DateTime::createFromFormat('Ymd', $rawData[5] ?? '1970-01-01');
+        $this->dueDate = $dueDate;
         // todo assign symbols from payer reference and vice-versa if one information is available and other is not
         $this->variableSymbol = is_numeric($rawData[6] ?? '') ? (int) $rawData[6] : null;
         $this->constantSymbol = is_numeric($rawData[7] ?? '') ? (int) $rawData[7] : null;
@@ -203,9 +214,9 @@ class DecodedBySquareData
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSpecificSymbol(): int
+    public function getSpecificSymbol(): ?int
     {
         return $this->specificSymbol;
     }

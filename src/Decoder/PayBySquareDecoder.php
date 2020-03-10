@@ -74,6 +74,7 @@ class PayBySquareDecoder
 
         // convert the result to binary data and remove the header to get the body
         $binaryData = hex2bin($base16Transformed);
+        assert(is_string($binaryData));
         $binaryBody = substr($binaryData, 4);
 
         // decode the binary body using lzma1
@@ -93,11 +94,15 @@ class PayBySquareDecoder
                 'w',
             ],
         ], $xzProcessPipes);
+        if (!is_resource($xzProcess)) {
+            throw new PayBySquareException('Could not spawn the decoding process');
+        }
         fwrite($xzProcessPipes[0], $binaryBody);
         fclose($xzProcessPipes[0]);
 
         $error = stream_get_contents($xzProcessPipes[2]);
         $lzDecoded = stream_get_contents($xzProcessPipes[1]);
+        assert(is_string($lzDecoded));
 
         fclose($xzProcessPipes[1]);
         fclose($xzProcessPipes[2]);
@@ -147,14 +152,14 @@ class PayBySquareDecoder
      *
      * @param string $character
      *
-     * @return string
+     * @return int
      */
-    private function numerifyCharacter(string $character): string
+    private function numerifyCharacter(string $character): int
     {
         if (is_numeric($character)) {
-            return $character;
+            return (int) $character;
         }
 
-        return strval(ord(strtoupper($character)) - ord('A') + 10);
+        return ord(strtoupper($character)) - ord('A') + 10;
     }
 }
