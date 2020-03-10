@@ -108,18 +108,18 @@ class DecodedBySquareData
 
         // the first 4 bytes are the crc32 sum
         $this->paymentId = substr($rawData[0] ?? '', 4);
-        $this->paymentsCount = (int)$rawData[1] ?? 0;
+        $this->paymentsCount = (int) $rawData[1] ?? 0;
         $this->regularPayment = ($rawData[2] ?? false) === '1';
-        $this->amount = (float)$rawData[3] ?? 0;
+        $this->amount = (float) $rawData[3] ?? 0;
         $this->currency = $rawData[4] ?? '';
         $this->dueDate = DateTime::createFromFormat('Ymd', $rawData[5] ?? '1970-01-01');
         // todo assign symbols from payer reference and vice-versa if one information is available and other is not
-        $this->variableSymbol = is_numeric($rawData[6] ?? '') ? (int)$rawData[6] : null;
-        $this->constantSymbol = is_numeric($rawData[7] ?? '') ? (int)$rawData[7] : null;
-        $this->specificSymbol = is_numeric($rawData[8] ?? '') ? (int)$rawData[8] : null;
+        $this->variableSymbol = is_numeric($rawData[6] ?? '') ? (int) $rawData[6] : null;
+        $this->constantSymbol = is_numeric($rawData[7] ?? '') ? (int) $rawData[7] : null;
+        $this->specificSymbol = is_numeric($rawData[8] ?? '') ? (int) $rawData[8] : null;
         $this->payerReference = $rawData[9] ?? '';
         $this->note = $rawData[10] ?? '';
-        $this->ibanCount = (int)$rawData[11] ?? 0;
+        $this->ibanCount = (int) $rawData[11] ?? 0;
         for ($index = 12; $index < 12 + $this->ibanCount * 2; $index += 2) {
             $this->ibans[] = new IBAN($rawData[$index] ?? '', $rawData[$index + 1] ?? '');
         }
@@ -236,14 +236,17 @@ class DecodedBySquareData
 
     /**
      * Returns the first IBAN
-     * @return IBAN
+     *
      * @throws PayBySquareException
+     *
+     * @return IBAN
      */
     public function getIban(): IBAN
     {
         if ($this->ibanCount <= 0) {
             throw new PayBySquareException('There are no IBANs');
         }
+
         return $this->ibans[0];
     }
 

@@ -8,6 +8,7 @@ class IBAN
      * @var string
      */
     private $iban;
+
     /**
      * @var string
      */

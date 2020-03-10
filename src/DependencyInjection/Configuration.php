@@ -7,14 +7,12 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-
     /**
      * @inheritDoc
      */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('rikudou_pay_by_square_decoder');
-
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode

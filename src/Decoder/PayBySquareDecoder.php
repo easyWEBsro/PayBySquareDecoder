@@ -9,14 +9,17 @@ class PayBySquareDecoder
 {
     /**
      * The path to xz binary, null means autodetect
+     *
      * @var string|null
      */
     private $xzBinary = null;
 
     /**
      * @param string $encodedString
-     * @return DecodedBySquareData
+     *
      * @throws PayBySquareException
+     *
+     * @return DecodedBySquareData
      */
     public function decode(string $encodedString): DecodedBySquareData
     {
@@ -88,7 +91,7 @@ class PayBySquareDecoder
             2 => [
                 'pipe',
                 'w',
-            ]
+            ],
         ], $xzProcessPipes);
         fwrite($xzProcessPipes[0], $binaryBody);
         fclose($xzProcessPipes[0]);
@@ -100,7 +103,7 @@ class PayBySquareDecoder
         fclose($xzProcessPipes[2]);
 
         $exitCode = proc_close($xzProcess);
-        if($exitCode !== 0) {
+        if ($exitCode !== 0) {
             throw new PayBySquareException(sprintf('There was an error decoding data: %s', $error));
         }
 
@@ -109,24 +112,9 @@ class PayBySquareDecoder
     }
 
     /**
-     * By Square standard defines its own character table where the characters are a combination of [0-9] and [A-Z].
-     * The characters A-Z are pretty much a continuation of the numbers, e.g. A = 10, B = 11 ... Z = 35
-     *
-     * @param string $character
-     * @return string
-     */
-    private function numerifyCharacter(string $character): string
-    {
-        if (is_numeric($character)) {
-            return $character;
-        }
-
-        return strval(ord(strtoupper($character)) - ord('A') + 10);
-    }
-
-    /**
-     * @return string
      * @throws PayBySquareException
+     *
+     * @return string
      */
     public function getXzBinary(): string
     {
@@ -137,11 +125,13 @@ class PayBySquareDecoder
             }
             $this->xzBinary = $output[0];
         }
+
         return $this->xzBinary;
     }
 
     /**
      * @param null|string $xzBinary
+     *
      * @return PayBySquareDecoder
      */
     public function setXzBinary(?string $xzBinary)
@@ -149,5 +139,22 @@ class PayBySquareDecoder
         $this->xzBinary = $xzBinary;
 
         return $this;
+    }
+
+    /**
+     * By Square standard defines its own character table where the characters are a combination of [0-9] and [A-Z].
+     * The characters A-Z are pretty much a continuation of the numbers, e.g. A = 10, B = 11 ... Z = 35
+     *
+     * @param string $character
+     *
+     * @return string
+     */
+    private function numerifyCharacter(string $character): string
+    {
+        if (is_numeric($character)) {
+            return $character;
+        }
+
+        return strval(ord(strtoupper($character)) - ord('A') + 10);
     }
 }
