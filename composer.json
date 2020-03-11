@@ -10,7 +10,8 @@
         }
     ],
     "suggest": {
-        "symfony/framework-bundle": "Version 4.4 or greater, if you want this package to work with symfony"
+        "symfony/framework-bundle": "Version 4.4 or greater, if you want this package to work with symfony",
+        "rikudou/skqrpayment": "If you want to encode payments using Pay By Square standard"
     },
     "minimum-stability": "stable",
     "require": {
