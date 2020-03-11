@@ -5,9 +5,6 @@ Pay By Square standard.
 
 > This package can be used as a standalone library or a Symfony bundle
 
-> The package is currently in alpha state and public api will
-> likely change slightly
-
 ## Installing
 
 `composer require rikudou/pay-by-square-decoder`
