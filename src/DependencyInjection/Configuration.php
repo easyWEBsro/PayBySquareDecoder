@@ -21,6 +21,10 @@ class Configuration implements ConfigurationInterface
                     ->info('The path to the xz binary, null means auto detect')
                     ->defaultNull()
                 ->end()
+                ->booleanNode('allow_partial_data')
+                    ->info('Whether to continue even if decoding fails due to unexpected end of input and only partial data are available')
+                    ->defaultTrue()
+                ->end()
             ->end();
 
         return $treeBuilder;

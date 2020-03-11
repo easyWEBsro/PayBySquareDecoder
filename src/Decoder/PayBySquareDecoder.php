@@ -2,6 +2,7 @@
 
 namespace Rikudou\BySquare\Decoder;
 
+use Rikudou\BySquare\Config\PayBySquareDecoderConfiguration;
 use Rikudou\BySquare\Exception\PayBySquareException;
 use Rikudou\BySquare\VO\DecodedBySquareData;
 
@@ -13,6 +14,19 @@ class PayBySquareDecoder
      * @var string|null
      */
     private $xzBinary = null;
+
+    /**
+     * @var PayBySquareDecoderConfiguration
+     */
+    private $configuration;
+
+    public function __construct(PayBySquareDecoderConfiguration $configuration = null)
+    {
+        if ($configuration === null) {
+            $configuration = new PayBySquareDecoderConfiguration();
+        }
+        $this->configuration = $configuration;
+    }
 
     /**
      * @param string $encodedString
@@ -103,13 +117,19 @@ class PayBySquareDecoder
         $error = stream_get_contents($xzProcessPipes[2]);
         $lzDecoded = stream_get_contents($xzProcessPipes[1]);
         assert(is_string($lzDecoded));
+        assert(is_string($error));
 
         fclose($xzProcessPipes[1]);
         fclose($xzProcessPipes[2]);
 
         $exitCode = proc_close($xzProcess);
         if ($exitCode !== 0) {
-            throw new PayBySquareException(sprintf('There was an error decoding data: %s', $error));
+            if (
+                !$this->configuration->isAllowPartialData()
+                || strpos($error, 'Unexpected end of input') === false
+            ) {
+                throw new PayBySquareException(sprintf('There was an error decoding data: %s', $error));
+            }
         }
 
         // the data are separated by TAB
