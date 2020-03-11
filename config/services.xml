@@ -6,6 +6,8 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="rikudou.by_square.decoder" class="Rikudou\BySquare\Decoder\PayBySquareDecoder" />
+        <service id="rikudou.by_square.decoder_config" class="Rikudou\BySquare\Config\PayBySquareDecoderConfiguration" />
+
         <!-- Aliases -->
         <service id="Rikudou\BySquare\Decoder\PayBySquareDecoder" alias="rikudou.by_square.decoder" />
     </services>

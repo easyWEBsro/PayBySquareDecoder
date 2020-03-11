@@ -3,11 +3,11 @@
 namespace Rikudou\BySquare\DependencyInjection;
 
 use Exception;
-use Rikudou\BySquare\Config\PayBySquareDecoderConfiguration;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 class RikudouPayBySquareDecoderExtension extends Extension
 {
@@ -21,13 +21,13 @@ class RikudouPayBySquareDecoderExtension extends Extension
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.xml');
-
-        $decoderConfig = new PayBySquareDecoderConfiguration();
-        $decoderConfig->setAllowPartialData($configs['allow_partial_data']);
-
         $configs = $this->processConfiguration(new Configuration(), $configs);
+
+        $decoderConfig = $container->getDefinition('rikudou.by_square.decoder_config');
+        $decoderConfig->addMethodCall('setAllowPartialData', [$configs['allow_partial_data']]);
+
         $definition = $container->getDefinition('rikudou.by_square.decoder');
-        $definition->addArgument($decoderConfig);
+        $definition->addArgument(new Reference('rikudou.by_square.decoder_config'));
         $definition->addMethodCall('setXzBinary', [$configs['xz_path']]);
     }
 }
