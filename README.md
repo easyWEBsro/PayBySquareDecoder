@@ -1,6 +1,6 @@
 # Pay By Square decoder
 
-This library decodes the string encoded according the the Slovakian
+This library decodes the string encoded according to the Slovakian
 Pay By Square standard.
 
 > This package can be used as a standalone library or a Symfony bundle
