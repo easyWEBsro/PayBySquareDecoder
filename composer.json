@@ -2,7 +2,7 @@
     "name": "rikudou/pay-by-square-decoder",
     "description": "Decoder for the Pay By Square standard",
     "type": "symfony-bundle",
-    "license": "WTFPL",
+    "license": "MIT",
     "authors": [
         {
             "name": "Dominik Chrastecky",
