@@ -1,5 +1,7 @@
 # Pay By Square decoder
 
+[![Download](https://img.shields.io/packagist/dt/rikudou/pay-by-square-decoder.svg)](https://packagist.org/packages/rikudou/pay-by-square-decoder)
+
 This library decodes the string encoded according to the Slovakian
 Pay By Square standard.
 
