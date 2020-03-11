@@ -12,7 +12,7 @@ class PayBySquareDecoderConfiguration
     /**
      * @return bool
      */
-    public function isAllowPartialData(): bool
+    public function isPartialDataAllowed(): bool
     {
         return $this->allowPartialData;
     }

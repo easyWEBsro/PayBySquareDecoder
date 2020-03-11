@@ -50,6 +50,39 @@ $decodedData = $decoder->decode($encodedData);
 // $decodedData is now an instance of \Rikudou\BySquare\VO\DecodedBySquareData
 ```
 
+## Advanced configuration
+
+The `\Rikudou\BySquare\Decoder\PayBySquareDecoder` takes a configuration
+object as a first argument, where some advanced configuration can take place.
+
+If no configuration object is provided, one with default values is created.
+
+Currently only partial data config is available.
+
+```php
+<?php
+
+use Rikudou\BySquare\Decoder\PayBySquareDecoder;
+use Rikudou\BySquare\Config\PayBySquareDecoderConfiguration;
+
+$config = new PayBySquareDecoderConfiguration();
+$config
+    ->setAllowPartialData(false);
+
+$decoder = new PayBySquareDecoder($config);
+```
+
+### Options
+
+- **allow partial data**
+    - *type*: `bool`
+    - *default*: `true`
+    - *methods*: `setAllowPartialData(bool)` / `isPartialDataAllowed()`
+    - *description*: The xz binary can sometimes fail due to unexpected
+    end of input because of numerous reasons which often are not an issue.
+    When set to true, the decoder will accept the partial data even if
+    xz thinks it's incomplete.
+
 ## Usage in Symfony
 
 If you use Symfony flex, the package should be configured
@@ -83,12 +116,14 @@ and change the path, here is the default config (generated using
 `config:dump` command):
 
 ```yaml
-# Default configuration for "RikudouPayBySquareDecoderBundle"
+# Default configuration for extension with alias: "rikudou_pay_by_square_decoder"
 rikudou_pay_by_square_decoder:
 
     # The path to the xz binary, null means auto detect
     xz_path:              null
 
+    # Whether to continue even if decoding fails due to unexpected end of input and only partial data are available
+    allow_partial_data:   true
 ```
 
 ## Return values description

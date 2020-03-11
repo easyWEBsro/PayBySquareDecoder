@@ -125,7 +125,7 @@ class PayBySquareDecoder
         $exitCode = proc_close($xzProcess);
         if ($exitCode !== 0) {
             if (
-                !$this->configuration->isAllowPartialData()
+                !$this->configuration->isPartialDataAllowed()
                 || strpos($error, 'Unexpected end of input') === false
             ) {
                 throw new PayBySquareException(sprintf('There was an error decoding data: %s', $error));
