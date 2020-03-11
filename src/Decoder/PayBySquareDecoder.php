@@ -49,7 +49,7 @@ class PayBySquareDecoder
             throw new PayBySquareException('This library can only handle Pay By Square standard');
         }
 
-        if ($version > 0) {
+        if ($version > 0b0000) {
             throw new PayBySquareException(
                 sprintf("This library currently supports only version 0 of standard, '%s' given", bindec($version))
             );
