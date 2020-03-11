@@ -5,33 +5,33 @@ namespace Rikudou\BySquare\VO;
 class IBAN
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $iban;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $bic;
 
-    public function __construct(string $iban, string $bic)
+    public function __construct(?string $iban, ?string $bic)
     {
         $this->iban = $iban;
         $this->bic = $bic;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIban(): string
+    public function getIban(): ?string
     {
         return $this->iban;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getBic(): string
+    public function getBic(): ?string
     {
         return $this->bic;
     }

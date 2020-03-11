@@ -13,7 +13,7 @@ class DecodedBySquareData
     private $version;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $paymentId;
 
@@ -33,12 +33,12 @@ class DecodedBySquareData
     private $amount;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $currency;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
     private $dueDate;
 
@@ -58,12 +58,12 @@ class DecodedBySquareData
     private $specificSymbol;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $payerReference;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $note;
 
@@ -88,17 +88,17 @@ class DecodedBySquareData
     private $directDebit;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $payeeName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $payeeAddressLine1;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $payeeAddressLine2;
 
@@ -112,33 +112,36 @@ class DecodedBySquareData
     {
         $this->version = $version;
 
-        $dueDate = DateTime::createFromFormat('Ymd', $rawData[5] ?? '1970-01-01');
+        $dueDate = ($rawData[5] ?? null) ? DateTime::createFromFormat('Ymd', $rawData[5]) : null;
         if ($dueDate === false) {
-            $dueDate = new DateTime('1970-01-01');
+            $dueDate = null;
+        }
+        $internalId = substr($rawData[0] ?? '', 4);
+        if (!$internalId) {
+            $internalId = null;
         }
 
         // the first 4 bytes are the crc32 sum
-        $this->paymentId = substr($rawData[0] ?? '', 4);
+        $this->paymentId = $internalId;
         $this->paymentsCount = (int) $rawData[1] ?? 0;
         $this->regularPayment = ($rawData[2] ?? false) === '1';
-        $this->amount = (float) $rawData[3] ?? 0;
-        $this->currency = $rawData[4] ?? '';
+        $this->amount = (float) $rawData[3] ?? null;
+        $this->currency = $rawData[4] ?? null;
         $this->dueDate = $dueDate;
-        // todo assign symbols from payer reference and vice-versa if one information is available and other is not
         $this->variableSymbol = is_numeric($rawData[6] ?? '') ? (int) $rawData[6] : null;
         $this->constantSymbol = is_numeric($rawData[7] ?? '') ? (int) $rawData[7] : null;
         $this->specificSymbol = is_numeric($rawData[8] ?? '') ? (int) $rawData[8] : null;
-        $this->payerReference = $rawData[9] ?? '';
-        $this->note = $rawData[10] ?? '';
+        $this->payerReference = ($rawData[9] ?? null) ?: null;
+        $this->note = ($rawData[10] ?? null) ?: null;
         $this->ibanCount = (int) $rawData[11] ?? 0;
         for ($index = 12; $index < 12 + $this->ibanCount * 2; $index += 2) {
-            $this->ibans[] = new IBAN($rawData[$index] ?? '', $rawData[$index + 1] ?? '');
+            $this->ibans[] = new IBAN($rawData[$index] ?? null, $rawData[$index + 1] ?? null);
         }
         $this->standingOrder = ($rawData[$index] ?? false) === '1';
         $this->directDebit = ($rawData[$index + 1] ?? false) === '1';
-        $this->payeeName = $rawData[$index + 2] ?? '';
-        $this->payeeAddressLine1 = $rawData[$index + 3] ?? '';
-        $this->payeeAddressLine2 = $rawData[$index + 4] ?? '';
+        $this->payeeName = ($rawData[$index + 2] ?? null) ?: null;
+        $this->payeeAddressLine1 = ($rawData[$index + 3] ?? null) ?: null;
+        $this->payeeAddressLine2 = ($rawData[$index + 4] ?? null) ?: null;
     }
 
     /**
@@ -150,9 +153,9 @@ class DecodedBySquareData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPaymentId(): string
+    public function getPaymentId(): ?string
     {
         return $this->paymentId;
     }
@@ -182,17 +185,17 @@ class DecodedBySquareData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCurrency(): string
+    public function getCurrency(): ?string
     {
         return $this->currency;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getDueDate(): DateTime
+    public function getDueDate(): ?DateTime
     {
         return $this->dueDate;
     }
@@ -222,17 +225,17 @@ class DecodedBySquareData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPayerReference(): string
+    public function getPayerReference(): ?string
     {
         return $this->payerReference;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNote(): string
+    public function getNote(): ?string
     {
         return $this->note;
     }
@@ -286,25 +289,25 @@ class DecodedBySquareData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPayeeName(): string
+    public function getPayeeName(): ?string
     {
         return $this->payeeName;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPayeeAddressLine1(): string
+    public function getPayeeAddressLine1(): ?string
     {
         return $this->payeeAddressLine1;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPayeeAddressLine2(): string
+    public function getPayeeAddressLine2(): ?string
     {
         return $this->payeeAddressLine2;
     }
